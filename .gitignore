@@ -9,6 +9,8 @@
 /venv/
 /vcpkg/
 
+# Files:
+/src/py/custom_user_path.txt
 
 # File Types
 *.pyc

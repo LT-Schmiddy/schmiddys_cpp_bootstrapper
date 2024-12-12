@@ -1,17 +1,18 @@
-from __future__ import annotations
 import os
 
 from colors import *
-
 from . import json_class
-from . import anon_func as af
+
+def is_build_version():
+    return getattr(sys, 'frozen', False)
 
 
-def mkdir_if_missing(dir_path: str):
+def mkdir_if_missing(dir_path: str) -> bool:
     if not os.path.isdir(dir_path):
-        # os.mkdir(dir_path)
         os.makedirs(dir_path)
-
+        return True
+    
+    return False
 
 def list_contains(p_filter, p_list):
     for x in p_list:
@@ -19,13 +20,12 @@ def list_contains(p_filter, p_list):
             return True
     return False
 
-
 def list_get(p_filter, p_list):
+    retVal = []
     for x in p_list:
         if p_filter(x):
-            return x
-    return None
-
+            retVal.append(x)
+    return retVal
 
 def print_color(fg: str, *args, **kwargs):
     p_list = []
@@ -59,22 +59,13 @@ def yn_prompt(msg: str = "", default=None):
         print_error("Invalid response. Try again...")
 
 
-def exec_path(path: str):
-    if os.name == "nt":
-        return path + ".exe"
-    return path
-
-
-
 __all__ = (
     "mkdir_if_missing",
     "list_contains",
     "list_get",
     "json_class",
-    "af",
     "print_color",
     "print_error",
     "print_warning",
-    "yn_prompt",
-    "exec_path"
+    "yn_prompt"
 )

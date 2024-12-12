@@ -8,21 +8,13 @@ import project
 import commands
 
 
-def init_settings(force_global=False):
-    if force_global:
-        settings.is_local_project = False
-        settings.forced_global_mode = True
-    else:
-        settings.update_local_status()
-
-    settings.load_settings(settings.settings_path, settings.s_globals)
-    if settings.is_local_project:
-        settings.load_settings(settings.settings_path, settings.current)
-        settings.load_settings(settings.local_settings_path, settings.current)
+def init_user():
+    settings.paths.init_paths()
+    
+    if mkdir_if_missing(settings.paths.scb_user_dir):
+        print(f"Created scb user directory at '{settings.paths.scb_user_dir}'.")
         
-        project.attempt_load_local_project()
-    else:
-        settings.load_settings(settings.settings_path, settings.current)
+    settings.load_settings(settings.paths.scb_user_settings_path)
 
 
 def print_cmd_list():
@@ -42,33 +34,30 @@ def args_len_check():
 
 
 def main():
+    init_user()
     # if no command is given:
     args_len_check()
-
     # Force global check:
     if sys.argv[1] in ["g", "global"]:
         del sys.argv[1]
         # We've edited the args list. Need to check length again:
         # print("-> (Forced) Running globally: ")
         args_len_check()
-        init_settings(True)
-    else:
-        init_settings()
 
-    if settings.s_globals["vcpkg"]["path"] is None:
-        print_warning("WARNING: global vcpkg installation unset.")
-        print_warning(
-            f"Before you can use MCT properly, you must run either 'mct g install-vcpkg' to install a global "\
-                f"vcpkg instance, or set the path to one manually in '{settings.settings_path}'."
-        )
-        print_warning(
-            "If that is what you're currently trying to do, then you may disregard this message."
-        )
+    # if settings.s_globals["vcpkg"]["path"] is None:
+    #     print_warning("WARNING: global vcpkg installation unset.")
+    #     print_warning(
+    #         f"Before you can use MCT properly, you must run either 'mct g install-vcpkg' to install a global "\
+    #             f"vcpkg instance, or set the path to one manually in '{settings.settings_path}'."
+    #     )
+    #     print_warning(
+    #         "If that is what you're currently trying to do, then you may disregard this message."
+    #     )
 
-    if settings.is_local_project:
-        print("-> Running for local project: '" + settings.project_dir + "': ")
-    else:
-        print("-> Running globally: ")
+    # if settings.is_local_project:
+    #     print("-> Running for local project: '" + settings.project_dir + "': ")
+    # else:
+    #     print("-> Running globally: ")
 
     cmd = sys.argv[1]
     cmds = commands.get_commands()

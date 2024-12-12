@@ -1,108 +1,27 @@
-import sys
-import os
-import json
+import sys, os, json
+from pathlib import Path
+
 from colors import *
-
-from util import anon_func
-from .paths import *
-
-exec_dir, exec_file = os.path.split(os.path.abspath(sys.argv[0]))
-
-exec_dir = exec_dir.replace("\\", "/")
-
-# determine if application is a script file or frozen exe
-if getattr(sys, 'frozen', False):
-    exec_dir = os.path.dirname(sys.executable)
-# elif __file__:
-    # exec_dir = os.path.dirname(__file__)
-
+import util
+from . import paths
 # If we're executing as the source version, the main .py file  is actually found in the `src` subdirectory
 # of the project, and `exec_dir` is changed to reflect that. We'll create `exec_file_dir` in case we actually need the
 # unmodified path to that script. Obviously, in build mode, these two values will be the same.
-exec_file_dir = exec_dir
-
-
-def is_source_version():
-    return exec_file.endswith(".py")
-
-def is_build_version():
-    return not is_source_version()
-
-
-
-if is_source_version():
-    path_arr = exec_dir.split("/")
-    exec_dir = "/".join(path_arr[: len(path_arr) - 2]).replace("/", "\\")
-
-# print(f"Is Source: {is_source_version()}")
-# print(f"Is Build: {is_build_version()}")
-# print(f"Exec Dir: {exec_dir}")
-
-global_file_name = "global_mct_user_settings.json"
-local_file_name = "mct_user_settings.json"
-global_settings_path = get_global_exec_path(global_file_name)
-forced_global_mode = False
-
-
-def local_project_check(start_path = os.getcwd().replace('\\', '/')) -> Union[tuple, None]:
-    global local_file_name
-    # Load the cwd, and make sure the slashing works cross-platform:
-    def _r_check_dir(path):
-        global local_file_name
-        settings_path = os.path.join(path, local_file_name)
-        if os.path.isfile(settings_path):
-            return True, path, settings_path
-        else:
-            # Move the search path up a directory:
-            new_path = "/".join(path.split("/")[:-1])
-            # print(new_path)
-            if len(new_path) == 0:
-                return False, None, None
-            else:
-                return _r_check_dir(new_path)
-    return _r_check_dir(start_path)
-
-is_local_project, project_dir, local_settings_path = None, None, None
-
-def update_local_status(start_path = os.getcwd().replace('\\', '/')):
-    global is_local_project, project_dir, local_settings_path
-    is_local_project, project_dir, local_settings_path = local_project_check(start_path)
 
 def default_settings():
     return {
         "common": {
-            "template_dir":  get_global_exec_path("new_cmake_templates"),
-            # "additional_template_dirs": []
-        },
-        "cmake": {
-            "exec": "cmake",
+            "additional_template_dirs": []
         },
         "vcpkg": {
-            "exec": "vcpkg",
-            "use_external": False,
-            "path": None,
             "repo_uri": "https://github.com/microsoft/vcpkg.git",
             "disable_metrics": True,
-            "has_been_installed": False,
-            "package-group-triplets": {}
         },
-        "git": {
-            "exec": "git"
-        },
-        "toolchain": {
-            "use_global": False,
-            "use_local": True,
-            "user_toolchain_values": {},
-            "private_toolchain_files": []
-        }
-
     }
 
-s_globals = default_settings()
 current = default_settings()
 
-
-def load_settings(path: str = global_settings_path, settings_dict: dict = current):
+def load_settings(path: Path = paths.scb_user_settings_path, settings_dict: dict = current):
 
     def recursive_load_list(main: list, loaded: list):
         for i in range(0, max(len(main), len(loaded))):
@@ -139,21 +58,22 @@ def load_settings(path: str = global_settings_path, settings_dict: dict = curren
         main.update(new_update_dict)
 
     # load preexistent settings file
-    if os.path.exists(path) and os.path.isfile(path):
+    if path.exists() and path.is_file():
         try:
             imported_settings = json.load(open(path, "r"))
             # current.update(imported_settings)
             recursive_load_dict(settings_dict, imported_settings)
         except json.decoder.JSONDecodeError as e:
-            print (color(f"CRITICAL ERROR IN LOADING SETTINGS: {e}", fg='red'))
-            print (color("Using default settings...", fg='yellow'))
+            util.print_error(f"CRITICAL ERROR IN LOADING SETTINGS: {e}")
+            util.print_error("Using default settings...", fg='yellow')
 
     # settings file not found
     else:
         save_settings(path, settings_dict)
+        print(f"Created new settings file at '{path}'.")
 
 
-def save_settings(path: str = global_settings_path, settings_dict: dict = current):
+def save_settings(path: str = paths.scb_user_settings_path, settings_dict: dict = current):
     outfile = open(path, "w")
     json.dump(settings_dict, outfile, indent=4)
     outfile.close()

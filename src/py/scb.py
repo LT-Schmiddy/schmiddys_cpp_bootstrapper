@@ -41,7 +41,7 @@ def args_len_check():
         sys.exit(1)
 
 
-if __name__ == "__main__":
+def main():
     # if no command is given:
     args_len_check()
 
@@ -104,3 +104,6 @@ if __name__ == "__main__":
     else:
         print_error(f"FATAL ERROR: Unknown cause - {result}")
         sys.exit(1)
+
+if __name__ == "__main__":
+    main()

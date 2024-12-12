@@ -1,0 +1,15 @@
+# Directories
+/.vscode/
+__pycache__/*
+/build/
+/dist/
+/old/
+/proj/*
+/test/
+/venv/
+/vcpkg/
+
+
+# File Types
+*.pyc
+

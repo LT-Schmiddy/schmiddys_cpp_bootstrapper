@@ -39,6 +39,6 @@ def get_command_desc():
 
 
 # Importing all commands here:
-from .packages_cmd import *
-from .project_cmd import *
-from .template_cmd import *
+# from .packages_cmd import *
+# from .project_cmd import *
+# from .template_cmd import *

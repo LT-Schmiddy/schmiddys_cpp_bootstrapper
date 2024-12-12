@@ -15,14 +15,14 @@ def init_settings(force_global=False):
     else:
         settings.update_local_status()
 
-    settings.load_settings(settings.global_settings_path, settings.s_globals)
+    settings.load_settings(settings.settings_path, settings.s_globals)
     if settings.is_local_project:
-        settings.load_settings(settings.global_settings_path, settings.current)
+        settings.load_settings(settings.settings_path, settings.current)
         settings.load_settings(settings.local_settings_path, settings.current)
         
         project.attempt_load_local_project()
     else:
-        settings.load_settings(settings.global_settings_path, settings.current)
+        settings.load_settings(settings.settings_path, settings.current)
 
 
 def print_cmd_list():
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         print_warning("WARNING: global vcpkg installation unset.")
         print_warning(
             f"Before you can use MCT properly, you must run either 'mct g install-vcpkg' to install a global "\
-                f"vcpkg instance, or set the path to one manually in '{settings.global_settings_path}'."
+                f"vcpkg instance, or set the path to one manually in '{settings.settings_path}'."
         )
         print_warning(
             "If that is what you're currently trying to do, then you may disregard this message."
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         if settings.is_local_project:
             settings.save_settings(settings.local_settings_path, settings.current)
         else:
-            settings.save_settings(settings.global_settings_path, settings.current)
+            settings.save_settings(settings.settings_path, settings.current)
 
         sys.exit(0)
 

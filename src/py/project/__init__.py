@@ -40,7 +40,7 @@ def attempt_load_project():
         util.print_color("green", f"-> Running for local project '{get_project_root()}':")
         load_project_config(current_config_path)
     else:
-        print("green", "-> Running globally: ")
+        util.print_color("green", "-> Running without project: ")
         
         
 def locate_project_file() -> Path:

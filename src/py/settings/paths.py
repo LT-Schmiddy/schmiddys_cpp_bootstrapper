@@ -22,9 +22,11 @@ def init_paths():
         dev_paths = json.loads(dev_paths_file.read_text())
 
     if "custom_user_path" in dev_paths:
-        custom_user_path = Path(dev_paths["custom_user_path"])
+        custom_user_path: Path = None
         
-        if not custom_user_path.is_absolute():
+        if os.path.isabs(dev_paths["custom_user_path"]):
+            custom_user_path = Path(dev_paths["custom_user_path"])
+        else:
             custom_user_path = exec_dir.joinpath(dev_paths["custom_user_path"])
         
         scb_user_dir = custom_user_path

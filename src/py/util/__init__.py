@@ -1,7 +1,7 @@
-import os
+import os, json
+from pathlib import Path
 
 from colors import *
-from . import json_class
 
 def is_build_version():
     return getattr(sys, 'frozen', False)
@@ -59,11 +59,66 @@ def yn_prompt(msg: str = "", default=None):
         print_error("Invalid response. Try again...")
 
 
+def save_json_config(path: Path, config: dict):
+    path.write_text(json.dumps(config, indent=4))
+    
+
+def load_json_config(path: Path, default_config: dict):
+    
+    def recursive_load_list(main: list, loaded: list):
+        for i in range(0, max(len(main), len(loaded))):
+            # Found in both:
+            if i < len(main) and i < len(loaded):
+                if isinstance(loaded[i], dict):
+                    recursive_load_dict(main[i], loaded[i])
+                elif isinstance(loaded[i], list):
+                    recursive_load_list(main[i], loaded[i])
+                else:
+                    main[i] = loaded[i]
+            # Found in main only:
+            elif i < len(loaded):
+                main.append(loaded[i])
+
+
+    def recursive_load_dict(main: dict, loaded: dict):
+        new_update_dict = {}
+        for key, value in main.items():
+            if not (key in loaded):
+                continue
+            if isinstance(value, dict):
+                recursive_load_dict(value, loaded[key])
+            elif isinstance(value, list):
+                recursive_load_list(value, loaded[key])
+            else:
+                new_update_dict[key] = loaded[key]
+        
+        # Load settings added to file:
+        for key, value in loaded.items():
+            if not (key in main):
+                new_update_dict[key] = loaded[key]
+
+        main.update(new_update_dict)
+
+    # load preexistent settings file
+    if path.exists() and path.is_file():
+        try:
+            imported_config = json.loads(path.read_text())
+            # current.update(imported_settings)
+            recursive_load_dict(default_config, imported_config)
+        except json.decoder.JSONDecodeError as e:
+            print_error(f"CRITICAL ERROR IN LOADING SETTINGS: {e}")
+            print_error("Using default settings...", fg='yellow')
+
+    # settings file not found
+    else:
+        save_json_config(path, default_config)
+        print(f"Created new settings file at '{path}'.")
+
+
 __all__ = (
     "mkdir_if_missing",
     "list_contains",
     "list_get",
-    "json_class",
     "print_color",
     "print_error",
     "print_warning",

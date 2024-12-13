@@ -6,7 +6,6 @@ import sys, os, subprocess, argparse
 from util import *
 from colors import *
 import settings
-from settings import get_exec_path, get_exec_path_fslashed
 
 from tools import vcpkg, cmake_presets, template_manager
 

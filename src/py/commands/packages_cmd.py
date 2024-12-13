@@ -201,12 +201,12 @@ class InstallProjectPackagesCommand(CommandBase):
                 if ":" in entry:
                     name, triplet = entry.split(':')
                     
-                    if not name in project.current['packages']:
+                    if not name in project.current_config['packages']:
                         print_warning(f"WARNING: No package group named '{name}'. Skipping...")
                     else:
                         group_info[name] = triplet
                 else:
-                    if not entry in project.current['packages']:
+                    if not entry in project.current_config['packages']:
                         print_warning(f"WARNING: No package group named '{entry}'. Skipping...")
                     else:
                         group_info[entry] = settings.current['vcpkg']['package-group-triplets'][entry]
@@ -229,7 +229,7 @@ class InstallProjectPackagesCommand(CommandBase):
             print_color(cmake_presets.toolchain_message_color, " ===")
 
             
-            for pkg in project.current['packages'][group]:
+            for pkg in project.current_config['packages'][group]:
                 pkg_request = pkg
                 if triplet != "":
                     pkg_request = f"{pkg}:{triplet}"

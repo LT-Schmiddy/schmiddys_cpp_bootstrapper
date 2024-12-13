@@ -107,7 +107,7 @@ def load_json_config(path: Path, default_config: dict):
             recursive_load_dict(default_config, imported_config)
         except json.decoder.JSONDecodeError as e:
             print_error(f"CRITICAL ERROR IN LOADING SETTINGS: {e}")
-            print_error("Using default settings...", fg='yellow')
+            print_error("Using default settings...")
 
     # settings file not found
     else:

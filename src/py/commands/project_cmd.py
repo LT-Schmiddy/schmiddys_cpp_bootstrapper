@@ -168,11 +168,11 @@ class OLD_SetupProjectCommand(CommandBase):
         
         vcpkg.construct_package_group_triplets()
         
-        if len(project.current['required_user_toolchain_values']) > 0:
+        if len(project.current_config['required_user_toolchain_values']) > 0:
             print_color(
                 cmake_presets.toolchain_message_color, "This project requires the following user toolchain values:"
             )
-            for i in project.current['required_user_toolchain_values']:
+            for i in project.current_config['required_user_toolchain_values']:
                 print_color(
                     cmake_presets.toolchain_message_color, f"\t- {i}"
                 )

@@ -35,6 +35,8 @@ def args_len_check():
 
 def main():
     init_user()
+    project.attempt_load_project()
+    
     # if no command is given:
     args_len_check()
     # Force global check:

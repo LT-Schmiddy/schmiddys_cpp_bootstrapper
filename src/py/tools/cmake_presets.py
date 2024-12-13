@@ -182,7 +182,7 @@ def add_user_triplet(p_dict: dict, triplet: str, build_type: str = "", create_bu
 
 
 def construct_user_toolchain_values(verbose: bool = True):
-    for i in project.current["required_user_toolchain_values"]:
+    for i in project.current_config["required_user_toolchain_values"]:
         if i not in settings.current["toolchain"]["user_toolchain_values"].keys():
             settings.current["toolchain"]["user_toolchain_values"][str(i)] = None
 
@@ -239,7 +239,7 @@ def build_user_toolchain(path: str = None, verbose=True) -> str:
                 retVal += f"set({key} {value})\n"
                 
     retVal += "\n# Project Shared Includes:\n"
-    for i in project.current["shared_toolchain_files"]:
+    for i in project.current_config["shared_toolchain_files"]:
         path_str = str(Path(i).resolve().absolute()).replace("\\", "\\\\")
         retVal += f"include(\"{path_str}\")\n"
 

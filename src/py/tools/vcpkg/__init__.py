@@ -137,7 +137,7 @@ def construct_package_group_triplets():
         return
     
     
-    pkgs: dict = project.current['vcpkg']['package_groups']
+    pkgs: dict = project.current_config['vcpkg']['package_groups']
     for i in pkgs.keys():
         if not i in settings.current['vcpkg']['package-group-triplets']:
             settings.current['vcpkg']['package-group-triplets'][i] = ""

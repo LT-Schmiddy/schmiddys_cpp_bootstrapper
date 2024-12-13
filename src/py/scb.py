@@ -7,7 +7,7 @@ import settings
 import project
 import commands
 
-
+    
 def init_user():
     settings.paths.init_paths()
     

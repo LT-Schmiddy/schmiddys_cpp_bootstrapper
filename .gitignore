@@ -6,11 +6,12 @@
 /old/
 /proj/*
 /test/
+/test_user/
 /venv/
 /vcpkg/
 
 # Files:
-/src/py/custom_user_path.txt
+/src/py/dev_paths.json
 
 # File Types
 *.pyc

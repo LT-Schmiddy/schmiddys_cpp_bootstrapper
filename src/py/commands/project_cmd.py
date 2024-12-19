@@ -2,6 +2,7 @@ from re import sub
 from typing import Union
 
 import sys, os, subprocess, argparse, json
+from pathlib import Path
 
 from util import *
 from colors import *
@@ -23,17 +24,18 @@ class SetupProjectCommand(CommandBase):
             default=os.getcwd()
         )
 
-        self.argparser.add_argument(
-            "-f",
-            "--force",
-            action='store_true'
-        )
+        # self.argparser.add_argument(
+        #     "-f",
+        #     "--force",
+        #     action='store_true'
+        # )
 
     def process(self, args: argparse.Namespace):
-        mkdir_if_missing(args.path)
+        use_path: Path = Path(args.path)
+        mkdir_if_missing(use_path)
         
-        
-
+        new_project = project.ProjectInfo()
+        new_project.attempt_create_project(use_path)
         
 
 class AddTripletCommand(CommandBase):

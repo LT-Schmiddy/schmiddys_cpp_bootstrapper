@@ -10,10 +10,10 @@ exec_dir: Path = None
 scb_user_dir: Path = None
 scb_user_settings_path: Path = None
 
-cmake_base_dir = None
+cmake_core_dir = None
 
 def init_paths():
-    global exec_path, exec_dir, scb_user_dir, scb_user_settings_path
+    global exec_path, exec_dir, scb_user_dir, scb_user_settings_path, cmake_core_dir
     exec_path = Path(os.path.abspath(sys.argv[0]))
     exec_dir = exec_path.parent
     

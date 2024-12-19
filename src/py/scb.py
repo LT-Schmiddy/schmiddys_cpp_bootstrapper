@@ -45,7 +45,7 @@ def main():
         # print("-> (Forced) Running globally: ")
         args_len_check()
     else:
-        project.attempt_load_project()
+        project.info.attempt_load_project()
         
     if project.is_project():
         util.print_color("green", f"-> Running for local project '{project.get_project_root()}':")

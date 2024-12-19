@@ -8,13 +8,13 @@ config_file_name = "scb_project_config.json"
 current_config_path: Path = None
 current_config: dict = None
 
-def is_project_found() -> bool:
+def is_project() -> bool:
     return current_config_path is not None
 
 def get_project_root() -> Path:
     global current_config_path
 
-    if is_project_found():
+    if is_project():
         return current_config_path.parent
     return None
 
@@ -37,11 +37,7 @@ def attempt_load_project():
     
     current_config_path = locate_project_file()
     if current_config_path != None:
-        util.print_color("green", f"-> Running for local project '{get_project_root()}':")
         load_project_config(current_config_path)
-    else:
-        util.print_color("green", "-> Running without project: ")
-        
         
 def locate_project_file() -> Path:
     global config_file_name

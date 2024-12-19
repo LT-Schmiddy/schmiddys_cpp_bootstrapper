@@ -37,5 +37,3 @@ class AddTemplateCommand(CommandBase):
     def process(self, args: argparse.Namespace):
         template_manager.init_template(args.template, args.path)
 
-
-        # user_presets["configurePresets"].append(cmake_presets.make_user_preset("x64-windows", "debug"))

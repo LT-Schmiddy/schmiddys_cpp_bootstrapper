@@ -21,10 +21,16 @@ def default_settings():
 
 current = default_settings()
 
-def save_settings(path: str = paths.scb_user_settings_path, settings_dict: dict = current):
+def save_settings(path: Path = None, settings_dict: dict = current):
+    if path is None:
+        path = paths.scb_user_settings_path
+    
     util.save_json_config(path, settings_dict)
 
 
-def load_settings(path: Path = paths.scb_user_settings_path, settings_dict: dict = current):
+def load_settings(path: Path = None, settings_dict: dict = current):
+    if path is None:
+        path = paths.scb_user_settings_path
+    
     util.load_json_config(path, settings_dict)
 

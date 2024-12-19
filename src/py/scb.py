@@ -14,7 +14,7 @@ def init_user():
     if util.mkdir_if_missing(settings.paths.scb_user_dir):
         print(f"Created scb user directory at '{settings.paths.scb_user_dir}'.")
         
-    settings.load_settings(settings.paths.scb_user_settings_path)
+    settings.load_settings()
 
 
 def print_cmd_list():
@@ -47,8 +47,8 @@ def main():
     else:
         project.info.attempt_load_project()
         
-    if project.is_project():
-        util.print_color("green", f"-> Running for local project '{project.get_project_root()}':")
+    if project.info.is_project():
+        util.print_color("green", f"-> Running for local project '{project.info.get_project_root()}':")
     else:
         util.print_color("green", "-> Running without project: ")
 
@@ -67,7 +67,7 @@ def main():
 
     if result is None:
         util.print_color("green", "Command completed successfully!")
-        settings.save_settings(settings.settings_path, settings.current)
+        settings.save_settings()
         sys.exit(0)
 
     elif isinstance(result, str):

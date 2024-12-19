@@ -9,10 +9,10 @@ import commands
 
     
 def init_user():
-    settings.paths.init_paths()
+    settings.paths.load_paths()
     
     if util.mkdir_if_missing(settings.paths.scb_user_dir):
-        print(f"Created scb user directory at '{settings.paths.scb_user_dir}'.")
+        print(f"Created scb user directory at '{settings.path_handler.scb_user_dir}'.")
         
     settings.load_settings()
 

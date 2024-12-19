@@ -3,7 +3,7 @@ from pathlib import Path
 
 from colors import *
 import util
-from . import paths
+from . import path_handler
 # If we're executing as the source version, the main .py file  is actually found in the `src` subdirectory
 # of the project, and `exec_dir` is changed to reflect that. We'll create `exec_file_dir` in case we actually need the
 # unmodified path to that script. Obviously, in build mode, these two values will be the same.
@@ -20,6 +20,7 @@ def default_settings():
     }
 
 current = default_settings()
+paths = path_handler.PathHandler()
 
 def save_settings(path: Path = None, settings_dict: dict = current):
     if path is None:

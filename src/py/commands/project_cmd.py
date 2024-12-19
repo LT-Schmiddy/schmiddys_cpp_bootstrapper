@@ -24,11 +24,11 @@ class SetupProjectCommand(CommandBase):
             default=os.getcwd()
         )
 
-        # self.argparser.add_argument(
-        #     "-f",
-        #     "--force",
-        #     action='store_true'
-        # )
+        self.argparser.add_argument(
+            "-f",
+            "--force",
+            action='store_true'
+        )
 
     def process(self, args: argparse.Namespace):
         use_path: Path = Path(args.path)

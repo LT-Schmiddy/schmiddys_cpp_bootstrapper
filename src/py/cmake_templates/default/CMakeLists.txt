@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.19.0)
-project(test VERSION 0.1.0)
 
-set(TARGET_NAME test)
+include("./scb_cmake/scb_include.cmake")
+scb_init_project()
+project(${SCB_PROJECT_NAME} VERSION ${SCB_PROJECT_VERSION})
 
 cmake_policy(SET CMP0076 NEW)
 set (CMAKE_CXX_STANDARD 20)
 
-include_directories(${TRIPLET_INCLUDE_DIRS}) 
-
+set(TARGET_NAME ${SCB_PROJECT_NAME})
 add_executable(${TARGET_NAME})
 # add_library(${TARGET_NAME} SHARED test.cpp)
 # add_library(${TARGET_NAME} test.cpp)

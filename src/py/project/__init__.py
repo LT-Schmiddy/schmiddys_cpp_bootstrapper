@@ -2,6 +2,8 @@ import os, shutil, json, subprocess
 from typing import Union
 from pathlib import Path
 
+from tools.vcpkg import VcpkgInstance
+
 import util
 import settings
 
@@ -12,7 +14,7 @@ class ProjectInfo:
     config_path: Path = None
     config: dict = None
     
-    
+    vcpkg: VcpkgInstance = None
     
     @classmethod
     def default_project_config(cls):
@@ -33,17 +35,19 @@ class ProjectInfo:
         pass
     
     # Get general information:
+    @property
     def is_project(self) -> bool:
         return self.config_path is not None
 
-    def get_project_root(self) -> Path:
-        if self.is_project():
+    @property
+    def project_root(self) -> Path:
+        if self.is_project:
             return self.config_path.parent
         return None
     
     
     def get_project_cmake_core(self) -> Path:
-        if self.is_project():
+        if self.is_project:
             return self.config_path.parent
         return None
     
@@ -59,7 +63,9 @@ class ProjectInfo:
         
         # Copying the core cmake files:
         shutil.copytree(settings.paths.cmake_core_dir, self.config_path.parent.joinpath(self.CMAKE_CORE_DIR_NAME))
-    
+        
+        self.create_vcpkg_info()
+        
     def attempt_load_project(self, current_path: Path = None):
         if current_path is None:
             current_path = Path(os.getcwd())
@@ -67,7 +73,11 @@ class ProjectInfo:
         self.config_path = self.locate_project_file()
         if self.config_path  is not None:
             self.load_project_config(self.config_path)
+        
+        self.create_vcpkg_info()
     
+    def create_vcpkg_info(self):
+        self.vcpkg = VcpkgInstance(self.project_root.joinpath(self.config["vcpkg"]["local_path"]))
     
     def locate_project_file(self, current_path: Path = None) -> Path:
         if current_path is None:

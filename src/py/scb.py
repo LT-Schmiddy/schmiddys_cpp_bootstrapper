@@ -47,8 +47,8 @@ def main():
     else:
         project.info.attempt_load_project()
         
-    if project.info.is_project():
-        util.print_color("green", f"-> Running for local project '{project.info.get_project_root()}':")
+    if project.info.is_project:
+        util.print_color("green", f"-> Running for local project '{project.info.project_root}':")
     else:
         util.print_color("green", "-> Running without project: ")
 

@@ -7,15 +7,15 @@ import util
 class PathHandler:
     exec_path: Path = None
     exec_dir: Path = None
-
+    cmake_core_dir: Path = None
+    
     scb_user_dir: Path = None
     scb_user_settings_path: Path = None
-
-    cmake_core_dir = None
 
     def load_paths(self):
         self.exec_path = Path(os.path.abspath(sys.argv[0]))
         self.exec_dir = self.exec_path.parent
+        self.cmake_core_dir = self.exec_dir.joinpath("cmake_core")
         
         # Useful for development: set a custom path for the user home from a text file
         dev_paths = {}
@@ -36,8 +36,7 @@ class PathHandler:
         else:
             self.scb_user_dir = Path.home().joinpath(".scb")
         self.scb_user_settings_path = self.scb_user_dir.joinpath("scb_settings.json")
-        
-        self.cmake_core_dir = self.exec_dir.joinpath("cmake_core")
-
+    
+    
 def make_path_str_forward_slashed(path_str: str) -> str:
     return path_str.replace('\\', '/')
